@@ -13,3 +13,49 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id                String             @id @default(cuid())
+  firstName         String
+  lastName          String
+  email             String             @unique
+  password          String
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  favoriteCurrencies FavoriteCurrency[]
+
+  @@map("users")
+}
+
+model Currency {
+  id                String             @id @default(cuid())
+  name              String
+  code              String             @unique
+  symbol            String
+  type              CurrencyType
+  rate              Float              @default(1.0)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  favoriteCurrencies FavoriteCurrency[]
+
+  @@map("currencies")
+}
+
+model FavoriteCurrency {
+  id         String   @id @default(cuid())
+  userId     String
+  currencyId String
+  createdAt  DateTime @default(now())
+  
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currency   Currency @relation(fields: [currencyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, currencyId])
+  @@map("favorite_currencies")
+}
+
+enum CurrencyType {
+  FIAT
+  CRYPTO
+  COMMODITY
+}
