@@ -1,72 +1,46 @@
-import { PrismaClient } from '../generated/prisma';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { PrismaClient, CurrencyType } from '../generated/prisma';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Starting database seeding...');
+  console.log('Starting database seeding...');
 
-  // Create sample currencies
+  // Insert currencies
   const currencies = [
     {
       name: 'US Dollar',
       code: 'USD',
       symbol: '$',
-      type: 'FIAT' as const,
+      type: CurrencyType.FIAT,
       rate: 1.0,
     },
     {
       name: 'Euro',
       code: 'EUR',
       symbol: '€',
-      type: 'FIAT' as const,
+      type: CurrencyType.FIAT,
       rate: 0.85,
     },
     {
-      name: 'British Pound',
-      code: 'GBP',
-      symbol: '£',
-      type: 'FIAT' as const,
-      rate: 0.73,
+      name: 'Tether',
+      code: 'USDT',
+      symbol: '₮',
+      type: CurrencyType.CRYPTO,
+      rate: 1.0,
     },
     {
-      name: 'Japanese Yen',
-      code: 'JPY',
-      symbol: '¥',
-      type: 'FIAT' as const,
-      rate: 110.0,
-    },
-    {
-      name: 'Bitcoin',
-      code: 'BTC',
-      symbol: '₿',
-      type: 'CRYPTO' as const,
-      rate: 45000.0,
-    },
-    {
-      name: 'Ethereum',
-      code: 'ETH',
-      symbol: 'Ξ',
-      type: 'CRYPTO' as const,
-      rate: 3000.0,
-    },
-    {
-      name: 'Gold',
-      code: 'XAU',
-      symbol: 'Au',
-      type: 'COMMODITY' as const,
-      rate: 1800.0,
-    },
-    {
-      name: 'Silver',
-      code: 'XAG',
-      symbol: 'Ag',
-      type: 'COMMODITY' as const,
-      rate: 25.0,
+      name: 'Venezuelan Bolívar',
+      code: 'VES',
+      symbol: 'Bs',
+      type: CurrencyType.FIAT,
+      rate: 123.68,
     },
   ];
 
-  console.log('📊 Creating currencies...');
+  console.log('Creating currencies...');
   for (const currency of currencies) {
     await prisma.currency.upsert({
       where: { code: currency.code },
@@ -75,9 +49,9 @@ async function main() {
     });
   }
 
-  // Create sample users
+  // Sample users
   const hashedPassword = await bcrypt.hash('password123', 10);
-  
+
   const users = [
     {
       firstName: 'John',
@@ -93,7 +67,7 @@ async function main() {
     },
   ];
 
-  console.log('👥 Creating users...');
+  console.log('Creating users...');
   for (const user of users) {
     await prisma.user.upsert({
       where: { email: user.email },
@@ -102,7 +76,7 @@ async function main() {
     });
   }
 
-  // Create sample favorite currencies
+  // Favorite currencies
   const john = await prisma.user.findUnique({
     where: { email: 'john.doe@example.com' },
   });
@@ -111,51 +85,31 @@ async function main() {
     where: { email: 'jane.smith@example.com' },
   });
 
-  const btc = await prisma.currency.findUnique({
-    where: { code: 'BTC' },
-  });
-
-  const eth = await prisma.currency.findUnique({
-    where: { code: 'ETH' },
+  const usdt = await prisma.currency.findUnique({
+    where: { code: 'USDT' },
   });
 
   const eur = await prisma.currency.findUnique({
     where: { code: 'EUR' },
   });
 
-  if (john && btc && eth) {
-    console.log('⭐ Creating favorite currencies for John...');
+  if (john && usdt) {
     await prisma.favoriteCurrency.upsert({
       where: {
         userId_currencyId: {
           userId: john.id,
-          currencyId: btc.id,
+          currencyId: usdt.id,
         },
       },
       update: {},
       create: {
         userId: john.id,
-        currencyId: btc.id,
-      },
-    });
-
-    await prisma.favoriteCurrency.upsert({
-      where: {
-        userId_currencyId: {
-          userId: john.id,
-          currencyId: eth.id,
-        },
-      },
-      update: {},
-      create: {
-        userId: john.id,
-        currencyId: eth.id,
+        currencyId: usdt.id,
       },
     });
   }
 
   if (jane && eur) {
-    console.log('⭐ Creating favorite currencies for Jane...');
     await prisma.favoriteCurrency.upsert({
       where: {
         userId_currencyId: {
@@ -171,14 +125,14 @@ async function main() {
     });
   }
 
-  console.log('✅ Database seeding completed!');
+  console.log('Database seeding completed.');
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Error during seeding:', e);
+    console.error('Error during seeding:', e);
     process.exit(1);
   })
   .finally(async () => {
     await prisma.$disconnect();
-  }); 
+  });
