@@ -1,83 +1,83 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateCurrencyDto } from './dto/create-currency.dto';
-import { UpdateCurrencyDto } from './dto/update-currency.dto';
+// import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+// import { PrismaService } from '../prisma/prisma.service';
+// import { CreateCurrencyDto } from './dto/create-currency.dto';
+// import { UpdateCurrencyDto } from './dto/update-currency.dto';
 
-@Injectable()
-export class CurrenciesService {
-  constructor(private prisma: PrismaService) {}
+// @Injectable()
+// export class CurrenciesService {
+//   constructor(private prisma: PrismaService) {}
 
-  async create(createCurrencyDto: CreateCurrencyDto) {
-    const existingCurrency = await this.prisma.currency.findUnique({
-      where: { code: createCurrencyDto.code },
-    });
+//   async create(createCurrencyDto: CreateCurrencyDto) {
+//     const existingCurrency = await this.prisma.currency.findUnique({
+//       where: { code: createCurrencyDto.code },
+//     });
 
-    if (existingCurrency) {
-      throw new ConflictException('Currency with this code already exists');
-    }
+//     if (existingCurrency) {
+//       throw new ConflictException('Currency with this code already exists');
+//     }
 
-    return this.prisma.currency.create({
-      data: createCurrencyDto,
-    });
-  }
+//     return this.prisma.currency.create({
+//       data: createCurrencyDto,
+//     });
+//   }
 
-  async findAll() {
-    return this.prisma.currency.findMany();
-  }
+//   async findAll() {
+//     return this.prisma.currency.findMany();
+//   }
 
-  async findOne(id: string) {
-    const currency = await this.prisma.currency.findUnique({
-      where: { id },
-    });
+//   async findOne(id: string) {
+//     const currency = await this.prisma.currency.findUnique({
+//       where: { id },
+//     });
 
-    if (!currency) {
-      throw new NotFoundException('Currency not found');
-    }
+//     if (!currency) {
+//       throw new NotFoundException('Currency not found');
+//     }
 
-    return currency;
-  }
+//     return currency;
+//   }
 
-  async findByCode(code: string) {
-    return this.prisma.currency.findUnique({
-      where: { code },
-    });
-  }
+//   async findByCode(code: string) {
+//     return this.prisma.currency.findUnique({
+//       where: { code },
+//     });
+//   }
 
-  async update(id: string, updateCurrencyDto: UpdateCurrencyDto) {
-    await this.findOne(id);
+//   async update(id: string, updateCurrencyDto: UpdateCurrencyDto) {
+//     await this.findOne(id);
 
-    if (updateCurrencyDto.code) {
-      const existingCurrency = await this.prisma.currency.findUnique({
-        where: { code: updateCurrencyDto.code },
-      });
+//     if (updateCurrencyDto.code) {
+//       const existingCurrency = await this.prisma.currency.findUnique({
+//         where: { code: updateCurrencyDto.code },
+//       });
 
-      if (existingCurrency && existingCurrency.id !== id) {
-        throw new ConflictException('Currency with this code already exists');
-      }
-    }
+//       if (existingCurrency && existingCurrency.id !== id) {
+//         throw new ConflictException('Currency with this code already exists');
+//       }
+//     }
 
-    return this.prisma.currency.update({
-      where: { id },
-      data: updateCurrencyDto,
-    });
-  }
+//     return this.prisma.currency.update({
+//       where: { id },
+//       data: updateCurrencyDto,
+//     });
+//   }
 
-  async remove(id: string) {
-    await this.findOne(id);
+//   async remove(id: string) {
+//     await this.findOne(id);
     
-    return this.prisma.currency.delete({
-      where: { id },
-    });
-  }
+//     return this.prisma.currency.delete({
+//       where: { id },
+//     });
+//   }
 
-  async updateRates(rates: { code: string; rate: number }[]) {
-    const updates = rates.map(({ code, rate }) =>
-      this.prisma.currency.updateMany({
-        where: { code },
-        data: { rate },
-      })
-    );
+//   async updateRates(rates: { code: string; rate: number }[]) {
+//     const updates = rates.map(({ code, rate }) =>
+//       this.prisma.currency.updateMany({
+//         where: { code },
+//         data: { rate },
+//       })
+//     );
 
-    return Promise.all(updates);
-  }
-} 
+//     return Promise.all(updates);
+//   }
+// } 
