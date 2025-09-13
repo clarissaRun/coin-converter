@@ -1,9 +1,5 @@
 import { IsNotEmpty, IsString, IsNumber, IsEnum } from 'class-validator';
-
-export enum CurrencyType {
-  FIAT = 'FIAT',
-  CRYPTO = 'CRYPTO',
-}
+import { CurrencyType } from '@prisma/client';
 
 export class CreateCurrencyDto {
   @IsNotEmpty()
