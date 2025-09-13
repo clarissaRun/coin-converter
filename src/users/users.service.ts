@@ -1,4 +1,8 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -97,7 +101,7 @@ export class UsersService {
 
   async remove(id: string) {
     await this.findOne(id);
-    
+
     return this.prisma.user.delete({
       where: { id },
       select: {
@@ -110,4 +114,4 @@ export class UsersService {
       },
     });
   }
-} 
+}

@@ -3,7 +3,6 @@ import { IsNotEmpty, IsString, IsNumber, IsEnum } from 'class-validator';
 export enum CurrencyType {
   FIAT = 'FIAT',
   CRYPTO = 'CRYPTO',
-  COMMODITY = 'COMMODITY',
 }
 
 export class CreateCurrencyDto {
@@ -25,4 +24,4 @@ export class CreateCurrencyDto {
 
   @IsNumber()
   rate: number = 1.0;
-} 
+}
