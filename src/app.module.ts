@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { CurrenciesModule } from './currencies/currencies.module';
 import { FavoriteCurrenciesModule } from './favorite-currencies/favorite-currencies.module';
+import { BinanceModule } from './scraper/binance.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { FavoriteCurrenciesModule } from './favorite-currencies/favorite-currenc
     AuthModule,
     CurrenciesModule,
     FavoriteCurrenciesModule,
+    BinanceModule
   ],
   controllers: [AppController],
   providers: [AppService],
