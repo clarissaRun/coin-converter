@@ -7,7 +7,6 @@ export class FavoriteCurrenciesService {
   constructor(private prisma: PrismaService) {}
 
   async create(createFavoriteCurrencyDto: CreateFavoriteCurrencyDto) {
-    // Check if user exists
     const user = await this.prisma.user.findUnique({
       where: { id: createFavoriteCurrencyDto.userId },
     });
@@ -16,7 +15,6 @@ export class FavoriteCurrenciesService {
       throw new NotFoundException('User not found');
     }
 
-    // Check if currency exists
     const currency = await this.prisma.currency.findUnique({
       where: { id: createFavoriteCurrencyDto.currencyId },
     });
@@ -25,7 +23,6 @@ export class FavoriteCurrenciesService {
       throw new NotFoundException('Currency not found');
     }
 
-    // Check if favorite already exists
     const existingFavorite = await this.prisma.favoriteCurrency.findUnique({
       where: {
         userId_currencyId: {
