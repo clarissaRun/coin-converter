@@ -13,7 +13,7 @@ export function createCorsOptions(): CorsOptions {
     .filter((s) => s.length > 0);
 
   const originChecker: CorsOriginFn = (origin, cb) => {
-    // Permitir peticiones sin origen (ej. Postman, peticiones server-to-server)
+    // allow requests with no origin (ex. Postman, or server-to-server)
     if (!origin) {
       return cb(null, true);
     }
