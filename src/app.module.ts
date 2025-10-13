@@ -15,7 +15,7 @@ import { BinanceModule } from './scraper/binance.module';
     CurrenciesModule,
     FavoriteCurrenciesModule,
     ScheduleModule.forRoot(),
-    BinanceModule
+    BinanceModule,
   ],
 })
 export class AppModule {}
