@@ -5,7 +5,13 @@ import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { createCorsOptions } from './config/cors.config';
 
-async function bootstrap() {
+type CorsOriginCallback = (err: Error | null, allow: boolean) => void;
+type CorsOriginFn = (
+  origin: string | undefined,
+  callback: CorsOriginCallback,
+) => void;
+
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   app.enableCors(createCorsOptions());
 

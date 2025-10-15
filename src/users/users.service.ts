@@ -134,6 +134,10 @@ export class UsersService {
     }
 
     const deletedUser = await this.prisma.user.delete({
+  async remove(id: string) {
+    await this.findOne(id);
+
+    return this.prisma.user.delete({
       where: { id },
       select: {
         id: true,
