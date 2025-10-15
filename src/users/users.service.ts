@@ -1,16 +1,9 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Role } from '@prisma/client';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import {
-  User,
-  ResponseWithMessage,
-} from '../users/interfaces/users.interfaces';
+import { User, ResponseWithMessage } from '../users/interfaces/users.interfaces';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -18,6 +11,7 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
+
     const existingUser = await this.prisma.user.findUnique({
       where: { email: createUserDto.email },
     });
@@ -98,10 +92,7 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { email } });
   }
 
-  async update(
-    id: string,
-    updateUserDto: UpdateUserDto,
-  ): Promise<ResponseWithMessage<User>> {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<ResponseWithMessage<User>> {
     const user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!user) {
@@ -140,10 +131,6 @@ export class UsersService {
     }
 
     const deletedUser = await this.prisma.user.delete({
-  async remove(id: string) {
-    await this.findOne(id);
-
-    return this.prisma.user.delete({
       where: { id },
       select: {
         id: true,
