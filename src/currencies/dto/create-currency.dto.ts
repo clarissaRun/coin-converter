@@ -18,6 +18,4 @@ export class CreateCurrencyDto {
   @IsEnum(CurrencyType)
   type: CurrencyType;
 
-  @IsNumber()
-  rate: number = 1.0;
 }
