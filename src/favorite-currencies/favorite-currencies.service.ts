@@ -1,4 +1,8 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateFavoriteCurrencyDto } from './dto/create-favorite-currency.dto';
 
@@ -110,7 +114,7 @@ export class FavoriteCurrenciesService {
 
   async remove(id: string) {
     await this.findOne(id);
-    
+
     return this.prisma.favoriteCurrency.delete({
       where: { id },
       include: {
@@ -161,4 +165,4 @@ export class FavoriteCurrenciesService {
       },
     });
   }
-} 
+}

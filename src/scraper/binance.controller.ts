@@ -14,8 +14,8 @@ export class BinanceController {
     ]);
 
     const allAds = [
-      ...sellAds.map(ad => new BinanceDto(ad, 'SELL')),
-      ...buyAds.map(ad => new BinanceDto(ad, 'BUY')),
+      ...sellAds.map((ad) => new BinanceDto(ad, 'SELL')),
+      ...buyAds.map((ad) => new BinanceDto(ad, 'BUY')),
     ];
 
     return allAds;

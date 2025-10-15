@@ -2,7 +2,7 @@ export class BinanceDto {
   seller: string;
   price: string;
   methods: string[];
-  tradeType: 'SELL' | 'BUY'; 
+  tradeType: 'SELL' | 'BUY';
 
   constructor(ad: any, tradeType: 'SELL' | 'BUY') {
     this.seller = ad.advertiser.nickName;

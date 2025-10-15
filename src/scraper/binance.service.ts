@@ -25,17 +25,21 @@ export class BinanceService {
       publisherType: null,
     };
 
-    const response = await page.evaluate(async (url, body) => {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json, text/plain, */*',
-        },
-        body: JSON.stringify(body),
-      });
-      return res.json();
-    }, url, body);
+    const response = await page.evaluate(
+      async (url, body) => {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json, text/plain, */*',
+          },
+          body: JSON.stringify(body),
+        });
+        return res.json();
+      },
+      url,
+      body,
+    );
 
     await browser.close();
     return response.data;
@@ -47,12 +51,13 @@ export class BinanceService {
       this.scrapeP2P('BUY'),
     ]);
 
-    const allPrices = [...sellAds, ...buyAds].map(ad => parseFloat(ad.adv.price));
+    const allPrices = [...sellAds, ...buyAds].map((ad) =>
+      parseFloat(ad.adv.price),
+    );
     const sum = allPrices.reduce((acc, val) => acc + val, 0);
 
     return sum / allPrices.length;
   }
-
 
   async saveAverageRate() {
     const average = await this.getAverageRate();
@@ -61,7 +66,7 @@ export class BinanceService {
       process.env.BINANCE_P2P_ASSET || 'USDT',
       process.env.BINANCE_P2P_FIAT || 'VES',
       average,
-      RateSource.BINANCE
+      RateSource.BINANCE,
     );
   }
 
@@ -72,8 +77,8 @@ export class BinanceService {
     ]);
 
     return [
-      ...sellAds.map(ad => new BinanceDto(ad, 'SELL')),
-      ...buyAds.map(ad => new BinanceDto(ad, 'BUY')),
+      ...sellAds.map((ad) => new BinanceDto(ad, 'SELL')),
+      ...buyAds.map((ad) => new BinanceDto(ad, 'BUY')),
     ];
   }
 }
