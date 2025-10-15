@@ -1,11 +1,5 @@
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  MinLength,
-  MaxLength,
-  Matches,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength, MaxLength, Matches, IsEnum } from 'class-validator';
+import { Role } from '@prisma/client';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -33,4 +27,8 @@ export class CreateUserDto {
       'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
   })
   password: string;
-}
+
+  @IsEnum(Role) 
+  role?: Role;
+} 
+

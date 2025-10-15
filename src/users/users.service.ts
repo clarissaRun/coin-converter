@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { Role } from '@prisma/client';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
@@ -31,12 +32,14 @@ export class UsersService {
       data: {
         ...createUserDto,
         password: hashedPassword,
+        role: createUserDto.role
       },
       select: {
         id: true,
         firstName: true,
         lastName: true,
         email: true,
+        role: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -55,6 +58,7 @@ export class UsersService {
         firstName: true,
         lastName: true,
         email: true,
+        role:true,
         createdAt: true,
         updatedAt: true,
       },
@@ -74,6 +78,7 @@ export class UsersService {
         firstName: true,
         lastName: true,
         email: true,
+        role:true,
         createdAt: true,
         updatedAt: true,
       },
@@ -115,6 +120,7 @@ export class UsersService {
         firstName: true,
         lastName: true,
         email: true,
+        role: true,
         createdAt: true,
         updatedAt: true,
       },
