@@ -1,4 +1,8 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
@@ -43,7 +47,6 @@ export class CurrenciesService {
     });
   }
 
-
   async update(code: string, updateCurrencyDto: UpdateCurrencyDto) {
     await this.findOne(code);
 
@@ -70,4 +73,4 @@ export class CurrenciesService {
       where: { code },
     });
   }
-} 
+}
