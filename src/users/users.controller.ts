@@ -7,8 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
-  Req,
-  ForbiddenException
+  Req
 } from '@nestjs/common';
 import { Request } from 'express';
 import { UsersService } from './users.service';
