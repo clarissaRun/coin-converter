@@ -9,38 +9,45 @@ import { ConversionHistoryDto } from './dto/conversion-history.dto';
 export class ConversionsService {
   constructor(private prisma: PrismaService) {}
 
-  async conversion(
-    fromCurrencyId: string,
-    toCurrencyId: string,
-    amount: number,
-  ) {
-    const fromCurrency = await this.prisma.currency.findUnique({
-      where: { id: fromCurrencyId },
+  private async validateUser(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
     });
 
-    const toCurrency = await this.prisma.currency.findUnique({
-      where: { id: toCurrencyId },
-    });
-
-    if (!fromCurrency || !toCurrency) {
-      throw new NotFoundException('Invalid currency ID provided');
+    if (!user) {
+      throw new NotFoundException('User does not exist');
     }
+  }
 
-    const latestRate = await this.prisma.exchangeRate.findFirst({
-      where: {
-        fromCurrencyId,
-        toCurrencyId,
-      },
-      orderBy: {
-        timestamp: 'desc',
-      },
+  private async validateCurrencies(fromCurrencyId: string, toCurrencyId: string) {
+    const [from, to] = await Promise.all([
+      this.prisma.currency.findUnique({ where: { id: fromCurrencyId } }),
+      this.prisma.currency.findUnique({ where: { id: toCurrencyId } }),
+    ]);
+
+    if (!from || !to) {
+      throw new NotFoundException('Invalid currency');
+    }
+  }
+
+  private async getLatestRate(fromCurrencyId: string, toCurrencyId: string) {
+    const rate = await this.prisma.exchangeRate.findFirst({
+      where: { fromCurrencyId, toCurrencyId },
+      orderBy: { timestamp: 'desc' },
     });
 
-    if (!latestRate) {
+    if (!rate) {
       throw new NotFoundException('No exchange rate found for the provided currencies');
     }
 
-    const result = amount * latestRate.rate;
+    return rate;
+  }
+
+  async conversion(fromCurrencyId: string, toCurrencyId: string, amount: number) {
+    await this.validateCurrencies(fromCurrencyId, toCurrencyId);
+
+    const latestRate = await this.getLatestRate(fromCurrencyId, toCurrencyId);
+    const convertedAmount = amount * latestRate.rate;
 
     return {
       message: 'Amount converted successfully',
@@ -49,24 +56,18 @@ export class ConversionsService {
         toCurrency: toCurrencyId,
         rateUsed: latestRate.rate,
         timestamp: latestRate.timestamp,
-        convertedAmount: result,
+        convertedAmount,
       },
     };
   }
 
+  async create(dto: ConversionHistoryDto) {
+    const { userId, fromCurrencyId, toCurrencyId, amount } = dto;
 
-async create(conversionHistoryDto: ConversionHistoryDto) {
-    const { userId, fromCurrencyId, toCurrencyId, amount } = conversionHistoryDto;
+    await this.validateUser(userId);
+    await this.validateCurrencies(fromCurrencyId, toCurrencyId);
 
-    const latestRate = await this.prisma.exchangeRate.findFirst({
-      where: { fromCurrencyId, toCurrencyId },
-      orderBy: { timestamp: 'desc' },
-    });
-
-    if (!latestRate) {
-      throw new NotFoundException('No exchange rate found for the provided currencies');
-    }
-
+    const latestRate = await this.getLatestRate(fromCurrencyId, toCurrencyId);
     const result = amount * latestRate.rate;
 
     const history = await this.prisma.conversionHistory.create({
@@ -85,5 +86,4 @@ async create(conversionHistoryDto: ConversionHistoryDto) {
       data: history,
     };
   }
-
 }

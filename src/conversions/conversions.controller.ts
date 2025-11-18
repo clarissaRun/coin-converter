@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Post } from '@nestjs/common';
+import { Body, Controller, Get, Query, Post } from '@nestjs/common';
 import { ConversionsService } from './conversions.service';
 import { ConversionDto } from './dto/conversion.dto';
 import { ConversionHistoryDto } from './dto/conversion-history.dto';
