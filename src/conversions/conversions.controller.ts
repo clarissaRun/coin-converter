@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Query, Post } from '@nestjs/common';
+import { Body, Controller, Get, Query, Post, Param } from '@nestjs/common';
 import { ConversionsService } from './conversions.service';
 import { ConversionDto } from './dto/conversion.dto';
 import { ConversionHistoryDto } from './dto/conversion-history.dto';
@@ -19,6 +19,11 @@ export class ConversionsController {
   @Post()
   async create(@Body() conversionHistoryDto: ConversionHistoryDto) {
     return this.conversionsService.create(conversionHistoryDto);
+  }
+
+  @Get('history/:userId')
+  getUserHistory(@Param('userId') userId: string) {
+    return this.conversionsService.getUserHistory(userId);
   }
 
 }
