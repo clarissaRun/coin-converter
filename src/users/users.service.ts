@@ -164,11 +164,11 @@ export class UsersService {
   }
 
   async validateUser(id: string) {
-  const user = await this.prisma.user.findUnique({ where: { id } });
-  if (!user) {
-    throw new NotFoundException('User not found');
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
-  return user;
-}
 
 }
