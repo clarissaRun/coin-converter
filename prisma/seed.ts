@@ -47,7 +47,7 @@ async function main() {
       lastName: 'User',
       email: 'admin@example.com',
       password: hashedPassword,
-      role: Role.ADMIN, 
+      role: Role.ADMIN,
     },
     {
       firstName: 'Jane',
@@ -113,7 +113,6 @@ async function main() {
       },
     });
   }
-
 }
 
 main()
