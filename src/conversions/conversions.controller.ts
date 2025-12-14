@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Query, Post, Param } from '@nestjs/common';
 import { ConversionsService } from './conversions.service';
-import { ConversionDto } from './dto/conversion.dto';
+//import { ConversionDto } from './dto/conversion.dto';
 import { ConversionHistoryDto } from './dto/conversion-history.dto';
 
 @Controller('conversions')
